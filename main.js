@@ -61,16 +61,20 @@ const posts = [
   },
 ];
 
+const cont = document.getElementById("container");
 
 // ciclo per creare i post
 posts.forEach((element) => {
   let post = document.createElement("div");
-  element.created = element.created.split("-").reverse().join("-")
-  post.innerHTML = `<div class="post">
+  element.created = element.created.split("-").reverse().join("-");
+  if (element.author.image == null) {
+    let span = createAvatar(element.author.name)
+    post.innerHTML = `
+  <div class="post">
     <div class="post__header">
         <div class="post-meta">                    
-            <div class="post-meta__icon">
-                <img class="profile-pic" src=${element.author.image} alt=${element.author.name}>                    
+            <div class="post-meta__icon profile-pic-default">
+                ${span.innerHTML}                 
             </div>
             <div class="post-meta__data">
                 <div class="post-meta__author">${element.author.name}</div>
@@ -96,39 +100,84 @@ posts.forEach((element) => {
         </div> 
     </div>            
 </div>`;
-  post.classList.add("post");
-  const cont = document.getElementById("container");
-  cont.appendChild(post);
+  } else {
+      post.innerHTML = `
+      <div class="post">
+        <div class="post__header">
+            <div class="post-meta">                    
+                <div class="post-meta__icon">
+                    <img class="profile-pic" src=${element.author.image} alt=${element.author.name}>                    
+                </div>
+                <div class="post-meta__data">
+                    <div class="post-meta__author">${element.author.name}</div>
+                    <div class="post-meta__time">${element.created}</div>
+                </div>                    
+            </div>
+        </div>
+        <div class="post__text">${element.content}</div>
+        <div class="post__image">
+            <img src=${element.media} alt="">
+        </div>
+        <div class="post__footer">
+            <div class="likes js-likes">
+                <div class="likes__cta">
+                    <a class="like-button  js-like-button" data-postid="${element.id}">
+                        <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
+                        <span class="like-button__label">Mi Piace</span>
+                    </a>
+                </div>
+                <div class="likes__counter">
+                    Piace a <b id="like-counter-${element.id}" class="js-likes-counter">${element.likes}</b> persone
+                </div>
+            </div> 
+        </div>            
+    </div>`;
+  }
+post.classList.add("post");
+cont.appendChild(post);
+if (element.author.image == null) {
+    console.log("ciao")
+}
+div = document.querySelector(".post-meta__icon");
+console.log(div)
 });
 
 // aggiungo la funzione likePost a tutti i bottoni
 likeBtnArr = document.querySelectorAll(".like-button");
-likeBtnArr.forEach(element => {
-    element.addEventListener("click", likePost);
+likeBtnArr.forEach((element) => {
+  element.addEventListener("click", likePost);
 });
 
 let likedPosts = [];
 
 // Definisco le funzioni per gestire i like
 function likePost() {
-    let id = this.getAttribute("data-postid");
-    let likeCounter = document.getElementById(`like-counter-${id}`);
-    this.classList.toggle("like-button--liked");
-    if (!likedPosts.includes(id)) {
-        addLike(id, likeCounter);
-    } else {
-        subtractLike(id, likeCounter);
-    }
+  let id = this.getAttribute("data-postid");
+  let likeCounter = document.getElementById(`like-counter-${id}`);
+  this.classList.toggle("like-button--liked");
+  if (!likedPosts.includes(id)) {
+    addLike(id, likeCounter);
+  } else {
+    subtractLike(id, likeCounter);
+  }
 }
 
 function addLike(id, likeCounter) {
-    likedPosts.push(id);
-    posts[id-1].likes++;
-    likeCounter.innerText = posts[id-1].likes;
+  likedPosts.push(id);
+  posts[id - 1].likes++;
+  likeCounter.innerText = posts[id - 1].likes;
 }
 
 function subtractLike(id, likeCounter) {
-    posts[id-1].likes--;
-    likedPosts = likedPosts.filter(x => x !==id);
-    likeCounter.innerText = posts[id-1].likes;
+  posts[id - 1].likes--;
+  likedPosts = likedPosts.filter((x) => x !== id);
+  likeCounter.innerText = posts[id - 1].likes;
+}
+
+// definisco la funzione createAvatar
+function createAvatar(name) {
+  nameSplit = name.split(" ");
+  spanProfile = document.createElement("span");
+  spanProfile.innerText = nameSplit[0][0] + nameSplit[1][0];
+  return spanProfile;
 }
