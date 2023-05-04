@@ -61,6 +61,8 @@ const posts = [
   },
 ];
 
+
+// ciclo per creare i post
 posts.forEach((element) => {
   let post = document.createElement("div");
   post.innerHTML = `<div class="post">
@@ -71,7 +73,7 @@ posts.forEach((element) => {
             </div>
             <div class="post-meta__data">
                 <div class="post-meta__author">${element.author.name}</div>
-                <div class="post-meta__time">4 mesi fa</div>
+                <div class="post-meta__time">${element.created}</div>
             </div>                    
         </div>
     </div>
@@ -98,17 +100,19 @@ posts.forEach((element) => {
   cont.appendChild(post);
 });
 
-let likedPosts = [];
-
+// aggiungo la funzione likePost a tutti i bottoni
 likeBtnArr = document.querySelectorAll(".like-button");
 likeBtnArr.forEach(element => {
     element.addEventListener("click", likePost);
 });
 
+let likedPosts = [];
+
+// Definisco le funzioni per gestire i like
 function likePost() {
     let id = this.getAttribute("data-postid");
     let likeCounter = document.getElementById(`like-counter-${id}`);
-    this.classList.toggle(".like-button--liked");
+    this.classList.toggle("like-button--liked");
     if (!likedPosts.includes(id)) {
         addLike(id, likeCounter);
     } else {
@@ -118,14 +122,12 @@ function likePost() {
 
 function addLike(id, likeCounter) {
     likedPosts.push(id);
-    console.log(likedPosts)
     posts[id-1].likes++;
     likeCounter.innerText = posts[id-1].likes;
 }
 
 function subtractLike(id, likeCounter) {
     posts[id-1].likes--;
-    likeCounter.innerText = posts[id-1].likes;
     likedPosts = likedPosts.filter(x => x !==id);
-    console.log(likedPosts)
+    likeCounter.innerText = posts[id-1].likes;
 }
