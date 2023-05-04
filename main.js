@@ -65,6 +65,7 @@ const posts = [
 // ciclo per creare i post
 posts.forEach((element) => {
   let post = document.createElement("div");
+  element.created = element.created.split("-").reverse().join("-")
   post.innerHTML = `<div class="post">
     <div class="post__header">
         <div class="post-meta">                    
