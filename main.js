@@ -82,13 +82,13 @@ posts.forEach((element) => {
     <div class="post__footer">
         <div class="likes js-likes">
             <div class="likes__cta">
-                <a class="like-button  js-like-button" href="#" data-postid="1">
+                <a class="like-button  js-like-button" data-postid="${element.id}">
                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                     <span class="like-button__label">Mi Piace</span>
                 </a>
             </div>
             <div class="likes__counter">
-                Piace a <b id="like-counter-1" class="js-likes-counter">${element.likes}</b> persone
+                Piace a <b id="like-counter-${element.id}" class="js-likes-counter">${element.likes}</b> persone
             </div>
         </div> 
     </div>            
@@ -97,3 +97,35 @@ posts.forEach((element) => {
   const cont = document.getElementById("container");
   cont.appendChild(post);
 });
+
+let likedPosts = [];
+
+likeBtnArr = document.querySelectorAll(".like-button");
+likeBtnArr.forEach(element => {
+    element.addEventListener("click", likePost);
+});
+
+function likePost() {
+    let id = this.getAttribute("data-postid");
+    let likeCounter = document.getElementById(`like-counter-${id}`);
+    this.classList.toggle(".like-button--liked");
+    if (!likedPosts.includes(id)) {
+        addLike(id, likeCounter);
+    } else {
+        subtractLike(id, likeCounter);
+    }
+}
+
+function addLike(id, likeCounter) {
+    likedPosts.push(id);
+    console.log(likedPosts)
+    posts[id-1].likes++;
+    likeCounter.innerText = posts[id-1].likes;
+}
+
+function subtractLike(id, likeCounter) {
+    posts[id-1].likes--;
+    likeCounter.innerText = posts[id-1].likes;
+    likedPosts = likedPosts.filter(x => x !==id);
+    console.log(likedPosts)
+}

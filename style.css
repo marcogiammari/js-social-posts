@@ -109,6 +109,7 @@ h1 {
     border-radius: 8px;    
     text-decoration: none;
     color: #404040;
+    cursor: pointer;
 }
 
 .like-button:not(.like-button--liked):hover {
