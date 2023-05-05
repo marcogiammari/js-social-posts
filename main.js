@@ -67,14 +67,20 @@ const cont = document.getElementById("container");
 posts.forEach((element) => {
   let post = document.createElement("div");
   element.created = element.created.split("-").reverse().join("-");
+  let avatar = "";
   if (element.author.image == null) {
-    let span = createAvatar(element.author.name)
-    post.innerHTML = `
+    avatar = `<div class="profile-pic-default">
+                <span>${getInitials(element.author.name)}</span>
+              </div>`
+  } else {                    
+    avatar = `<img class="profile-pic" src=${element.author.image} alt=${element.author.name}></img>`
+  }
+  post.innerHTML = `
   <div class="post">
     <div class="post__header">
         <div class="post-meta">                    
             <div class="post-meta__icon profile-pic-default">
-                ${span.innerHTML}                 
+                ${avatar}                 
             </div>
             <div class="post-meta__data">
                 <div class="post-meta__author">${element.author.name}</div>
@@ -100,39 +106,6 @@ posts.forEach((element) => {
         </div> 
     </div>            
 </div>`;
-  } else {
-      post.innerHTML = `
-      <div class="post">
-        <div class="post__header">
-            <div class="post-meta">                    
-                <div class="post-meta__icon">
-                    <img class="profile-pic" src=${element.author.image} alt=${element.author.name}>                    
-                </div>
-                <div class="post-meta__data">
-                    <div class="post-meta__author">${element.author.name}</div>
-                    <div class="post-meta__time">${element.created}</div>
-                </div>                    
-            </div>
-        </div>
-        <div class="post__text">${element.content}</div>
-        <div class="post__image">
-            <img src=${element.media} alt="">
-        </div>
-        <div class="post__footer">
-            <div class="likes js-likes">
-                <div class="likes__cta">
-                    <a class="like-button  js-like-button" data-postid="${element.id}">
-                        <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
-                        <span class="like-button__label">Mi Piace</span>
-                    </a>
-                </div>
-                <div class="likes__counter">
-                    Piace a <b id="like-counter-${element.id}" class="js-likes-counter">${element.likes}</b> persone
-                </div>
-            </div> 
-        </div>            
-    </div>`;
-  }
 post.classList.add("post");
 cont.appendChild(post);
 if (element.author.image == null) {
@@ -175,9 +148,7 @@ function subtractLike(id, likeCounter) {
 }
 
 // definisco la funzione createAvatar
-function createAvatar(name) {
-  nameSplit = name.split(" ");
-  spanProfile = document.createElement("span");
-  spanProfile.innerText = nameSplit[0][0] + nameSplit[1][0];
-  return spanProfile;
+function getInitials(name) {
+  name = name.split(" ");
+  return name[0][0] + name[1][0];
 }
