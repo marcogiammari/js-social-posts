@@ -68,6 +68,8 @@ posts.forEach((element) => {
   let post = document.createElement("div");
   element.created = element.created.split("-").reverse().join("-");
   let avatar = "";
+
+  // if else per gestire la foto profilo
   if (element.author.image == null) {
     avatar = `<div class="profile-pic-default">
                 <span>${getInitials(element.author.name)}</span>
@@ -128,13 +130,11 @@ function likePost() {
   let id = this.getAttribute("data-postid");
   let likeCounter = document.getElementById(`like-counter-${id}`);
   this.classList.toggle("like-button--liked");
-  if (!likedPosts.includes(id)) {
-    addLike(id, likeCounter);
-  } else {
-    subtractLike(id, likeCounter);
-  }
+  // operatore ternario
+  !likedPosts.includes(id) ? addLike(id, likeCounter) : subtractLike(id, likeCounter);
 }
 
+// funzioni che aggiungono e tolgono il like
 function addLike(id, likeCounter) {
   likedPosts.push(id);
   posts[id - 1].likes++;
@@ -147,7 +147,7 @@ function subtractLike(id, likeCounter) {
   likeCounter.innerText = posts[id - 1].likes;
 }
 
-// definisco la funzione createAvatar
+// definisco la funzione getInitials
 function getInitials(name) {
   name = name.split(" ");
   return name[0][0] + name[1][0];
