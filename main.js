@@ -66,7 +66,8 @@ const cont = document.getElementById("container");
 // ciclo per creare i post
 posts.forEach((element) => {
   let post = document.createElement("div");
-  element.created = element.created.split("-").reverse().join("-");
+  element.created = element.created.split("-");
+  element.created = getPostDate(element.created) 
   let avatar = "";
 
   // if else per gestire la foto profilo
@@ -110,11 +111,6 @@ posts.forEach((element) => {
 </div>`;
 post.classList.add("post");
 cont.appendChild(post);
-if (element.author.image == null) {
-    console.log("ciao")
-}
-div = document.querySelector(".post-meta__icon");
-console.log(div)
 });
 
 // aggiungo la funzione likePost a tutti i bottoni
@@ -147,8 +143,23 @@ function subtractLike(id, likeCounter) {
   likeCounter.innerText = posts[id - 1].likes;
 }
 
-// definisco la funzione getInitials
+// ricava le iniziali del nome
 function getInitials(name) {
   name = name.split(" ");
   return name[0][0] + name[1][0];
+}
+
+// ricava gli anni e i giorni passati dalla data del post
+function getPostDate(date) {
+  const postDate = new Date(date[0], date[1]-1, date[2])
+  const days = 1000*60*60*24;
+  const years = days * 365;
+  const currentTime = new Date();
+  let diff = currentTime.getTime() - postDate.getTime();
+  const diffYears = Math.floor(diff / years)
+  const diffDays = Math.floor(diff / days)
+  let yearString = "";
+  diffYears>1 ? yearString="years" : yearString="year";
+  diff = (`${diffYears} ${yearString} and ${diffDays - diffYears*365} days ago`)
+  return (diff)
 }
